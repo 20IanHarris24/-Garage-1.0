@@ -15,24 +15,23 @@ namespace Assignment_5___Garage_1._0
         public int wheelNumber;
 
 
-        public void EnterGarage()
+
+        public string? VehicleRegistrationNumber { get; set; }
+
+        public string? VehicleEngineType { get; set; }
+
+        public string? VehicleColour { get; set; }
+
+        public int VehicleNumberOfWheels { get; set; }
+
+
+        static void DriveVehicle()
         {
 
         }
 
 
-        public void LeaveGarage()
-        {
-
-        }
-
-
-        public void  RegistrationNumber()
-        {
-
-            return 
-        }
-    
+           
     
     
     
