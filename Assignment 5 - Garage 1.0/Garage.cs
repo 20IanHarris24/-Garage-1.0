@@ -1,63 +1,175 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Formats.Asn1;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assignment_5___Garage_1._0
 {
-    
-    public class Garage <T> where T : class
+
+    internal class Garage<T> : IEnumerable<T> where T : Vehicle
     {
 
-        private List<T> _list;                                              //creating a limited list to simulate the garage.
-        private readonly int _parkingSpaces;
+        private int _parkingSpaces;
+        private int _availableSpaces;
+        private bool _park;
+        private bool _remove;
+        private T[] _vehicleGarage;
 
-        public int Check => _list.Count;
-        public bool GarageIsFull => _parkingSpaces <= Check;
-        public bool GarageIsEmpty => _parkingSpaces == Check;
+        public int Check => (_vehicleGarage.Length - _parkingSpaces);
+        public int SpaceCount { get { return _availableSpaces; } set { _availableSpaces = value; } }
+        public bool NoGarageSpace => _availableSpaces == Check;
+        public bool GarageSpace => _availableSpaces <= _parkingSpaces;
+
+        public int AvailableSpace { get { return _availableSpaces; } set { _availableSpaces = value; } }
+        public int ParkingSpace { get { return _parkingSpaces; } set { _parkingSpaces = value; } }
+
+        public T[] VehicleGarage { get { return _vehicleGarage; } set { _vehicleGarage = value; } }
+               
+
+
+
+        public Garage(int spaces)                                                                      //Instantiate the garage based on the user input number of spaces 
+        {
+            _parkingSpaces = Math.Max(spaces, 2);
+            _vehicleGarage = new T[_parkingSpaces];
+            _availableSpaces = _parkingSpaces;                                                         //Assigning variables for checking the status of the garage
+        }
 
         
-        
-        public Garage(int totalSpaces) 
+
+
+        public bool ParkVehicle(T vehicle)                                                              //vehicle can 'Park' in the garage
         {
-            _parkingSpaces = Math.Max(totalSpaces, 2);
-            _list = new List<T>(_parkingSpaces);
+            _park = false;
+            ArgumentNullException.ThrowIfNull(_vehicleGarage);
+
+            if (NoGarageSpace)
+            {
+                _park = false;
+                
+            }
+            if (GarageSpace)
+            {
+                var parkVehicle = Array.IndexOf(_vehicleGarage, null);
+                if (parkVehicle != -1)
+                {
+                    _park = true;
+                    _vehicleGarage[parkVehicle] = vehicle;                                               //finding an empty parking spot and parking the vehicle
+                    _availableSpaces--;
+
+                }
+                else if (parkVehicle == -1)
+                {
+                    _park = false;
+                }
+            }
+
+            return _park;
         }
 
-        public bool ParkCar(T item)                                         //vehicle can 'Park' in the garage
+
+        public bool RemoveVehicle(T vehicle)                                                                //vehicle can 'Leave' the garage
         {
-            bool confirm;
-            ArgumentNullException.ThrowIfNull(item, "item");
-            
-            if(GarageIsFull) confirm = false;    
-            _list.Add(item); confirm = true;
-            
-            return confirm;
+            _remove = false;
+            ArgumentNullException.ThrowIfNull(_vehicleGarage);
+
+            if (_availableSpaces == _parkingSpaces)
+            {
+                _remove = false;
+            }
+            if (GarageSpace)
+            {
+                var removeVehicle = Array.IndexOf(_vehicleGarage, vehicle);                                   //find the parking space in the source array of the vehicle to be removed
+                var updateGarage = new T[_vehicleGarage.Length];                                              //Create a new array to copy the remaining cars to  
+
+                for (int i = 0; i < _vehicleGarage.Length; i++)                                               // start the garage exit
+                {
+                    if (i == removeVehicle)                                                                   //Search for the car. when found "leave out"
+                    {
+                        _availableSpaces++;
+                        continue;
+                    }
+                    else
+                    {
+                        updateGarage[i] = _vehicleGarage[i];
+                    }
+                }
+
+                _remove = true;
+            }
+
+            PayParking(vehicle);
+            Console.ResetColor();
+            return _remove;
         }
 
 
-        public bool RemoveCar(T item)
+        public static bool PayParking(T vehicle)
         {
-            bool confirm;
-            ArgumentNullException.ThrowIfNull(item, "item");
-
-            if (GarageIsEmpty) confirm = false;
-            _list.Remove(item); confirm = true;
-
-            return confirm;
+            Console.WriteLine($"\n{vehicle._vehicleRegistrationNumber} has paid the parking charge and left the Garage");
+            return true;
         }
 
-    
-    
-    
-    
-    
-    
-    
+
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (var item in _vehicleGarage)
+            {
+                
+            yield return item;
+            }
+        }
+
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+
+
+
+
+
     }
 
+   /* internal class Employee : Object
+    {
+        public string Name { get; }
+        public uint Salary { get; }
 
+        public SalaryLevel SalaryLevel => Salary < 25000 ? SalaryLevel.Junior : SalaryLevel.Senior;
+        //{
+        //    get
+        //    {
+        //        if(Salary< 25000)
+        //        {
+        //            return SalaryLevel.Junior;
+        //        }
+        //        else
+        //        {
+        //            return SalaryLevel.Senior;
+        //        }
+        //    }
+        //}
+
+        public Employee(string name, uint salary)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Salary = salary;
+        }
+
+        //public string Print()
+        //{
+        //    return $"Name: {Name} Salary: {Salary} SalaryLevel: {SalaryLevel}";
+        //}
+
+        public override string ToString() => $"Name: {Name} Salary: {Salary} SalaryLevel: {SalaryLevel} {base.ToString()}";
+    }*/
 
 
 }
