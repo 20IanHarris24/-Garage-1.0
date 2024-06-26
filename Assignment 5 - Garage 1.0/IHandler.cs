@@ -10,7 +10,7 @@ namespace Assignment_5___Garage_1._0
     internal interface IHandler
     {
 
-        Garage<Vehicle> VGarage { get; }
+        Garage<Vehicle> TheGarage { get; }
 
         //void IHandler(int capacity);
         
@@ -18,15 +18,15 @@ namespace Assignment_5___Garage_1._0
         bool Park(Vehicle vehicle);
         
         bool Leave(Vehicle vehicle);
-        bool Leave(bool v);
+        //bool Leave(bool v);
         bool PayParking(Vehicle vehicle);
         IEnumerable<Vehicle> GetVehicles();
 
 
 
-        void DisplayVehicleDetails(Vehicle vehicle);
-        
 
+        void DisplayVehicleDetails(Vehicle vehicle);
+        void DisplayVehicleDetails();
 
     }
 

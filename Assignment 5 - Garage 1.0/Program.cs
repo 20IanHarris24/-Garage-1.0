@@ -67,7 +67,7 @@ internal class Program
                     case '1':
 
                         SeedVehicles();
-                        DisplayVehiclesInGarage();
+                        DisplayVehiclesInGarage();  //figure out which parameters to pass
                         break;
                     /*case '2':
                         ExamineQueue();
@@ -155,7 +155,7 @@ internal class Program
             bool success = false;
             do
             {
-                foreach (var vehicle in testGarage.VGarage)
+                foreach (var vehicle in testGarage.TheGarage)
                 {
                     success = testGarage.Park(new Car(0, "Car", "Electric", VehicleColour.Black, 4));
                     success = testGarage.Park(new Motorcycle(2, "Motorcycle", "Petrol", VehicleColour.Green, 3));
@@ -185,14 +185,21 @@ internal class Program
         {
         var What_is_it = testGarage.GetVehicles();
             
-            foreach (var vehicle in What_is_it)
+            foreach (var item in What_is_it)
             {
-                testGarage.DisplayVehicleDetails(vehicle);
+                testGarage.DisplayVehicleDetails(item);
             }
 
 
+        bool success = testGarage.Leave(vehicle: Car); //What is the valid object to pass here??
+        Console.WriteLine($"vehicle unparked or not: {success}");
 
         }
+
+
+        
+        
+        
         //testGarage.DisplayVehicleDetails(What_is_it);
         //testGarage.VGarage.VehicleGarage.DisplayVehicleDetails(car);
         //Vehicle.DisplayVehicleDetails(motorcycle);
@@ -208,8 +215,6 @@ internal class Program
         //Console.WriteLine($"vehicle parked or not: {success}");
         //success = testGarage.Park(motorcycle);
         //Console.WriteLine($"vehicle parked or not: {success}");
-        //success = testGarage.Leave(What_is_it is Car);
-        //Console.WriteLine($"vehicle unparked or not: {success}");
         //success = testGarage.Park(boat);
         //Console.WriteLine($"vehicle parked or not: {success}");
 

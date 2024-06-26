@@ -22,15 +22,15 @@ namespace Assignment_5___Garage_1._0
         private T[] _vehicleGarage;
 
         public int Check => (_vehicleGarage.Length - _parkingSpaces);
-        public int SpaceCount { get { return _availableSpaces; } set { _availableSpaces = value; } }
-        public bool NoGarageSpace => _availableSpaces == Check;
-        public bool GarageSpace => _availableSpaces <= _parkingSpaces;
+        /*public int SpaceCount { get { return _availableSpaces; } set { _availableSpaces = value; } }*/
+        public bool HasNoGarageSpace => _availableSpaces == Check;
+        public bool HasGarageSpace => _availableSpaces <= _parkingSpaces;
 
-        public int AvailableSpace { get { return _availableSpaces; } set { _availableSpaces = value; } }
-        public int ParkingSpace { get { return _parkingSpaces; } set { _parkingSpaces = value; } }
+        //public int AvailableSpace { get { return _availableSpaces; } set { _availableSpaces = value; } }
+        //public int ParkingSpace { get { return _parkingSpaces; } set { _parkingSpaces = value; } }
 
-        public T[] VehicleGarage { get { return _vehicleGarage; } set { _vehicleGarage = value; } }
-               
+        public T[] VehicleSpaces { get { return _vehicleGarage; } set { _vehicleGarage = value; } }
+
 
 
 
@@ -49,18 +49,18 @@ namespace Assignment_5___Garage_1._0
             _park = false;
             ArgumentNullException.ThrowIfNull(_vehicleGarage);
 
-            if (NoGarageSpace)
+           /* if (HasNoGarageSpace)
             {
                 _park = false;
                 
-            }
-            if (GarageSpace)
+            }*/
+            if (HasGarageSpace)
             {
-                var parkVehicle = Array.IndexOf(_vehicleGarage, null);
+                var parkVehicle = Array.IndexOf(_vehicleGarage, null);                                     //find the free parking spot
                 if (parkVehicle != -1)
                 {
                     _park = true;
-                    _vehicleGarage[parkVehicle] = vehicle;                                               //finding an empty parking spot and parking the vehicle
+                    _vehicleGarage[parkVehicle] = vehicle;                                               //Confirm the spot park the vehicle
                     _availableSpaces--;
 
                 }
@@ -79,35 +79,54 @@ namespace Assignment_5___Garage_1._0
             _remove = false;
             ArgumentNullException.ThrowIfNull(_vehicleGarage);
 
-            if (_availableSpaces == _parkingSpaces)
+            if (_availableSpaces == _parkingSpaces)                                                         //returning a false if the garage is empty and a car is tried to be unparked
             {
                 _remove = false;
             }
-            if (GarageSpace)
+            if (HasGarageSpace)
             {
                 var removeVehicle = Array.IndexOf(_vehicleGarage, vehicle);                                   //find the parking space in the source array of the vehicle to be removed
                 var updateGarage = new T[_vehicleGarage.Length];                                              //Create a new array to copy the remaining cars to  
 
                 for (int i = 0; i < _vehicleGarage.Length; i++)                                               // start the garage exit
                 {
-                    if (i == removeVehicle)                                                                   //Search for the car. when found "leave out"
+                    if (i == removeVehicle)                                                                   //Search for the car. when found "unpark"
                     {
+                        _vehicleGarage[i] = default(T)!;
                         _availableSpaces++;
-                        continue;
+                        _remove = true;
                     }
-                    else
+                    /*else
                     {
-                        updateGarage[i] = _vehicleGarage[i];
-                    }
+                        _remove = true;
+                        //updateGarage[i] = _vehicleGarage[i];
+                    }*/
                 }
 
-                _remove = true;
             }
 
             PayParking(vehicle);
             Console.ResetColor();
             return _remove;
         }
+
+
+
+
+
+        /*public bool Unpark(string regnr)
+        {
+            for (var i = 0; i < spaces.Length; i++)
+            {
+                if (spaces[i] != null && spaces[i].RegNr.ToLower() == regnr.ToLower())
+                {
+                    spaces[i] = default(T)!;// null;  // här körs fordonet ut
+                    current--;
+                    return true;
+                }
+            }
+            return false;
+        }*/
 
 
         public static bool PayParking(T vehicle)
